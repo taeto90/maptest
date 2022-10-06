@@ -42,10 +42,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double? latitude;
   double? longitude;
-  //List<Store> store_list = [];
-  var stores = FirebaseFirestore.instance.collection('geo_test').get();
-
-
+  List<Marker> marker_list = [];
+  final storeCollection = FirebaseFirestore.instance.collection('geo_test');
+  // .withConverter<Store>(
+  //   fromFirestore: (snapshot,_) => Store.fromJson(snapshot.data()!),
+  //   toFirestore: (post,_) => post.toJson(),
+  // );
+  
+  
   void getLocation() async {
     print('-------------------------------getlocation');
     MyLocation myLocation = MyLocation();
@@ -62,12 +66,27 @@ class _MyHomePageState extends State<MyHomePage> {
     getLocation();
     print(latitude);
     print(longitude);
+
+    storeCollection.get().then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        marker_list.add(make_Marker(doc['loc'].latitude,doc['loc'].longitude, doc['name'], context));
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.note_add),
+            onPressed: () {
+              print('ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ');
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(padding: EdgeInsets.only(top: 10, bottom: 10),
@@ -102,9 +121,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               ),
               MarkerLayer(
-                markers: [
-                  make_Marker(37.4911, 127.03035, '드림플러스', context)
-                ],
+                markers: marker_list
+                //[make_Marker(37.4911, 127.03035, '드림플러스', context)],
               )
             ],
           ))
@@ -113,37 +131,20 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
+//
 // class Store{
-//   Store({required this.name, required this.lat, required this.lng});
+//   Store({required this.name, required this.loc});
 //   final String name;
-//   final double lat;
-//   final double lng;
+//   final LatLng loc;
 //
 //   Store.fromJson(Map<String, Object?> json)
 //       : this(
 //     name: json['name']! as String,
-//     lat: json['loc'].latitude as GeoPoint ,
-//     lon: json['loc'].longitude as GeoPoint ,
+//     loc: json['loc'] as LatLng ,
 //   );
 //
 //   Map<String, Object?> toJson()=>{
-//     'title' : title,
-//     'likes' : likes,
-//     'createAt' : createAt,
-//     'imageUrl' : imageUrl,
+//     'name' : name,
+//     'loc' : loc,
 //   };
-// }
-// void getData() {
-//   databaseReference
-//       .collection("stores")
-//       .getDocuments()
-//       .then((QuerySnapshot snapshot) {
-//     snapshot.documents.forEach((f) {
-//       print('${f.data}}');
-//       GeoPoint pos = f.data['position'];
-//       LatLng latLng = new LatLng(pos.latitude, pos.longitude);
-//
-//     });
-//   });
 // }
