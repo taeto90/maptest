@@ -42,7 +42,13 @@ class _MyHomePageState extends State<MyHomePage> {
               child: FlutterMap(
             options: MapOptions(
               center: LatLng(37.491, 127.03),
-              zoom: 18
+              zoom: 18,
+              pinchZoomThreshold: 18,
+              // pinchMoveWinGestures: 18,
+              // rotationThreshold: 18,
+              // rotationWinGestures: 18,
+
+              enableScrollWheel: false,
             ),
             nonRotatedChildren: [
               AttributionWidget.defaultWidget(source: 'AAAAAAAAAAAAAAA',
