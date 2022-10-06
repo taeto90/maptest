@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "5839006646",
+    "firebase_url": "https://sql-python-firebase-default-rtdb.firebaseio.com",
+    "project_id": "sql-python-firebase",
+    "storage_bucket": "sql-python-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5839006646:android:18dfc3649c1400fb6baf17",
+        "android_client_info": {
+          "package_name": "com.example.map_test2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "5839006646-e1plg8dig4cr92bp97lbalasshcg96iv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvBVwpGNK8bT1qTHx9ieEKEycu4Y1qjII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "5839006646-e1plg8dig4cr92bp97lbalasshcg96iv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
