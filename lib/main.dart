@@ -48,9 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
   //   fromFirestore: (snapshot,_) => Store.fromJson(snapshot.data()!),
   //   toFirestore: (post,_) => post.toJson(),
   // );
-  
-  
-  void getLocation() async {
+
+
+  Future<void> getLocation() async {
     print('-------------------------------getlocation');
     MyLocation myLocation = MyLocation();
     await myLocation.getMyCurrentLocation();
@@ -64,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     print('-------------------------------init');
     getLocation();
+
     print(latitude);
     print(longitude);
 
@@ -82,7 +83,9 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: const Icon(Icons.note_add),
             onPressed: () {
-              print('ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ');
+              setState(() {
+                getLocation();
+              });
             },
           ),
         ],
