@@ -1,11 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+
 import 'package:latlong2/latlong.dart';
 import 'package:map_test2/make_marker.dart';
 import 'firebase_options.dart';
 import 'my_location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map/plugin_api.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +45,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double? latitude;
   double? longitude;
+  late MapController _mapController;
   List<Marker> marker_list = [];
+  double zoom_level =18.4;
   final storeCollection = FirebaseFirestore.instance.collection('geo_test');
   // .withConverter<Store>(
   //   fromFirestore: (snapshot,_) => Store.fromJson(snapshot.data()!),
@@ -56,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
     await myLocation.getMyCurrentLocation();
     latitude=myLocation.latitude;
     longitude=myLocation.longitude;
+
   }
 
   @override
@@ -64,13 +70,13 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     print('-------------------------------init');
     getLocation();
-
+    _mapController = MapController();
     print(latitude);
     print(longitude);
 
     storeCollection.get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
-        marker_list.add(make_Marker(doc['loc'].latitude,doc['loc'].longitude, doc['name'], context));
+        marker_list.add(make_Marker(doc['loc'].latitude,doc['loc'].longitude, doc['name'],doc['category'], context));
       });
     });
   }
@@ -97,10 +103,11 @@ class _MyHomePageState extends State<MyHomePage> {
           if(latitude != null)
           Flexible(
               child: FlutterMap(
+              mapController: _mapController,
             options: MapOptions(
               // center: LatLng(37.491, 127.03),
               center: LatLng(latitude!, longitude!),
-              zoom: 18,
+              zoom: zoom_level,
               maxZoom: 18.4,
               enableScrollWheel: true,
               enableMultiFingerGestureRace: false,
@@ -110,14 +117,28 @@ class _MyHomePageState extends State<MyHomePage> {
               AttributionWidget.defaultWidget(
                   source: 'AAAAAAAAAAAAAAA',
               onSourceTapped: (){}),
-
               // FlutterMapZoomButtons(
               //   minZoom:4,
-              //   maxZoom:19,
+              //   maxZoom:19.4,
               //   mini:true,
               //   padding: 10,
               //   alignment: Alignment.bottomRight
               // )
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FloatingActionButton(
+                      onPressed: (){
+                        _mapController.move(_mapController.center,_mapController.zoom +2);
+                      },
+                  child: Icon(Icons.zoom_in),),
+                  FloatingActionButton(
+                    onPressed: (){
+                      _mapController.move(_mapController.center,_mapController.zoom -2);
+                    },
+                    child: Icon(Icons.zoom_out),),
+                ],
+              )
             ],
             children: [
               TileLayer(
@@ -134,6 +155,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
 //
 // class Store{
 //   Store({required this.name, required this.loc});
@@ -151,3 +174,6 @@ class _MyHomePageState extends State<MyHomePage> {
 //     'loc' : loc,
 //   };
 // }
+
+
+
